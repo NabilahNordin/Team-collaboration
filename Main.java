@@ -75,9 +75,52 @@ public class Main {
 
 
 
-// AMIRAH'S PART //
+// AMIRA'S PART //
 
+import java.time.LocalDateTime;
+import java.util.Scanner;
 
+public class MainReservation {
+    public static void main(String[] args) {
+        VenueReservationSystem reservationSystem = new VenueReservationSystem();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("1. Make a reservation");
+System.out.println("2. Exit");
+System.out.print("Enter your choice: ");
+int choice = scanner.nextInt();
+scanner.nextLine(); // Consume newline left-over
+
+switch (choice) {
+    case 1:
+    System.out.print("Enter venue number (1-30): ");
+    int venueNumber = scanner.nextInt();
+    scanner.nextLine(); // Consume newline left-over
+
+    System.out.print("Enter reservation date (YYYY-MM-DD): ");
+    String dateString = scanner.nextLine();
+
+    System.out.print("Enter start time (HH:mm): ");
+    String startTimeString = scanner.nextLine();
+    LocalDateTime startTime = LocalDateTime.parse(dateString + " " + startTimeString, VenueReservationSystem.DATE_TIME_FORMATTER);
+
+    System.out.print("Enter end time (HH:mm): ");
+    String endTimeString = scanner.nextLine();
+    LocalDateTime endTime = LocalDateTime.parse(dateString + " " + endTimeString, VenueReservationSystem.DATE_TIME_FORMATTER);
+
+    reservationSystem.reserveVenue(venueNumber, startTime, endTime);
+    break;
+    case 2:
+        System.out.println("Exiting...");
+        scanner.close();
+        return;
+    default:
+        System.out.println("Invalid choice. Please enter 1 or 2.");
+}
+        }
+    }
+}
 
 
 // DINIY'S PART //

@@ -132,9 +132,74 @@ class Venue {
 
 
 
-// AMIRAH'S PART //
+// AMIRA'S PART //
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.Duration;
+import java.util.*;
+
+public class VenueReservationSystem {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final int TOTAL_VENUES = 30;
+    private static final int OPENING_HOUR = 8;
+    private static final int CLOSING_HOUR = 23;
+    private Map<Integer, PriorityQueue<LocalDateTime>> venueReservations;
+
+    public VenueReservationSystem() {
+        venueReservations = new HashMap<>();
+        for (int i = 1; i <= TOTAL_VENUES; i++) {
+            venueReservations.put(i, new PriorityQueue<>());
+        }
+    }
+
+    public boolean reserveVenue(int venueNumber, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        if (venueNumber < 1 || venueNumber > TOTAL_VENUES) {
+            System.out.println("Invalid venue number.");
+            return false;
+        }
+        if (startDateTime.getHour() < OPENING_HOUR || (startDateTime.getHour() == CLOSING_HOUR && startDateTime.getMinute() > 0) || endDateTime.getHour() > CLOSING_HOUR || (endDateTime.getHour() == CLOSING_HOUR && endDateTime.getMinute() > 0)) {
+            System.out.println("Venue is closed at this time.");
+            return false;
+        }
+        PriorityQueue<LocalDateTime> reservations = venueReservations.get(venueNumber);
+        for (LocalDateTime existing : reservations) {
+            if ((startDateTime.isEqual(existing) || startDateTime.isAfter(existing)) && startDateTime.isBefore(existing.plusHours(1))) {
+                System.out.println("Venue is already reserved at this time.");
+                return false;
+            }
+            if ((endDateTime.isEqual(existing) || endDateTime.isAfter(existing)) && endDateTime.isBefore(existing.plusHours(1))) {
+                System.out.println("Venue is already reserved at this time.");
+                return false;
+            }
+        }
+        reservations.add(startDateTime);
+        reservations.add(endDateTime);
+        System.out.println("Venue reserved successfully.");
+    
+        Duration duration = Duration.between(startDateTime, endDateTime);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        System.out.println("Your reservation is for " + hours + " hour(s) and " + minutes + " minute(s).");
+    
+        return true;
+    }
+
+    public void serveNextReservation(int venueNumber) {
+        if (venueNumber < 1 || venueNumber > TOTAL_VENUES) {
+            System.out.println("Invalid venue number.");
+            return;
+        }
+        PriorityQueue<LocalDateTime> reservations = venueReservations.get(venueNumber);
+        if (reservations.isEmpty()) {
+            
+            return;
+        }
+        LocalDateTime nextReservation = reservations.poll();
+        System.out.println("Serving reservation for venue " + venueNumber + " at " + nextReservation.format(DATE_TIME_FORMATTER));
+    }
+}
 
 
 // DINIY'S PART //
