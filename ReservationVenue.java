@@ -1,13 +1,20 @@
-<<<<<<< HEAD
-// add no1
-// accept add
-=======
-// 1 add 30 venue
+// Reservation Venue System //
+
+
+// DAMIA'S PART //
 
 
 
-//First comes first serve//
 
-// requesting Diniy to continue next step
-// Diniy Goodluck
->>>>>>> origin/Amira
+
+// NABILAH'S PART //
+
+
+
+
+// AMIRAH'S PART //
+
+
+
+
+// DINIY'S PART //
