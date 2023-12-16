@@ -16,6 +16,12 @@ iii. The assign task for each group member  // Diniy //
 
 iv. Brief Description of the case study // Nabilah //
 
+- *Title & Requirements*: 
+The system is designed for a building with 30 venues suitable for conferences and seminars. It must ensure no scheduling conflicts occur, operating on a first-come, first-served basis, and only available venues can be reserved. The venues are open from 8 am to 11 pm.
+
+- *Development Criteria*: 
+The system should be built with separate classes using encapsulation, inheritance if possible, and use an ArrayList or an Array for data storage. Date and time management is critical, and the system should include error checking for both input and output.
+
 v. Class Diagram with has-a(composition) and is-a(inheritance) relationship (if available)  // all members do /////
 
 steady but surely
