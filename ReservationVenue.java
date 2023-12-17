@@ -127,9 +127,145 @@ class Venue {
 
 
 
-// NABILAH'S PART //
+// NABILAH'S PART (combination with AMIRA's PART) //
 
+class Reservation {
+    private LocalDateTime start;
+    private LocalDateTime end;
 
+    public Reservation(LocalDateTime start, LocalDateTime end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public boolean conflictsWith(LocalDateTime otherStart, LocalDateTime otherEnd) {
+        return !start.isAfter(otherEnd) && !end.isBefore(otherStart);
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+}
+
+class Venue {
+    private String name;
+    private List<Reservation> reservations;
+
+    public Venue(String name) {
+        this.name = name;
+        this.reservations = new ArrayList<>();
+    }
+
+    public boolean tryReserve(LocalDateTime start, LocalDateTime end) {
+        for (Reservation reservation : reservations) {
+            if (reservation.conflictsWith(start, end)) {
+                return false;
+            }
+        }
+        reservations.add(new Reservation(start, end));
+        return true;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class VenueReservationManager {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private List<Venue> venues;
+
+    public VenueReservationManager() {
+        venues = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            venues.add(new Venue("Venue " + (i + 1)));
+        }
+    }
+
+    public boolean reserveVenue(int venueNumber, LocalDateTime start, LocalDateTime end) {
+        if (venueNumber < 1 || venueNumber > venues.size()) {
+            System.out.println("Invalid venue number");
+            return false;
+        }
+        if (!venues.get(venueNumber - 1).tryReserve(start, end)) {
+            System.out.println("Venue is already reserved at this time.");
+            return false;
+        }
+        System.out.println("Venue reserved successfully.");
+        Duration duration = Duration.between(start, end);
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        System.out.println("Your reservation is for " + hours + " hour(s) and " + minutes + " minute(s).");
+        return true;
+    }
+
+    // Implement checkReservationsByVenue, checkReservationsByDate, checkReservationsByTime methods
+    // ... (Add these methods here)
+    public void checkReservationsByVenue(int venueNumber) {
+        if (venueNumber < 1 || venueNumber > venues.size()) {
+            System.out.println("Invalid venue number");
+            return;
+        }
+        Venue venue = venues.get(venueNumber - 1);
+        if (venue.getReservations().isEmpty()) {
+            System.out.println("No reservations for Venue " + venueNumber);
+            return;
+        }
+        for (Reservation reservation : venue.getReservations()) {
+            System.out.println("Reserved from " +
+                               reservation.getStart().format(DATE_TIME_FORMATTER) +
+                               " to " +
+                               reservation.getEnd().format(DATE_TIME_FORMATTER));
+        }
+    }
+
+    public void checkReservationsByDate(LocalDate date) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        boolean foundReservation = false;
+        for (Venue venue : venues) {
+            for (Reservation reservation : venue.getReservations()) {
+                if (reservation.getStart().toLocalDate().equals(date)) {
+                    System.out.println(venue.getName() + " reserved from " +
+                                       reservation.getStart().format(DATE_TIME_FORMATTER) +
+                                       " to " +
+                                       reservation.getEnd().format(DATE_TIME_FORMATTER));
+                    foundReservation = true;
+                }
+            }
+        }
+        if (!foundReservation) {
+            System.out.println("No reservations found on " + date.format(dateFormatter));
+        }
+    }
+
+    public void checkReservationsByTime(LocalTime time) {
+        boolean foundReservation = false;
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        for (Venue venue : venues) {
+            for (Reservation reservation : venue.getReservations()) {
+                if (!reservation.getStart().toLocalTime().isAfter(time) &&
+                    !reservation.getEnd().toLocalTime().isBefore(time)) {
+                    System.out.println(venue.getName() + " has a reservation around " +
+                                       time.format(timeFormatter) +
+                                       " on " +
+                                       reservation.getStart().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    foundReservation = true;
+                }
+            }
+        }
+        if (!foundReservation) {
+            System.out.println("No reservations found around " + time.format(timeFormatter));
+        }
+    }
+}
 
 
 // AMIRA'S PART //
