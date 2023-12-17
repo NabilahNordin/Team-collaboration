@@ -72,8 +72,90 @@ public class Main {
 
 // NABILAH'S PART //
 
+public class MainReservation {
+    public static void main(String[] args) {
+        VenueReservationManager manager = new VenueReservationManager();
+        Scanner scanner = new Scanner(System.in);
 
+        while (true) {
+            System.out.println("1. Make a reservation");
+            System.out.println("2. Checking");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
 
+            switch (choice) {
+                case 1:
+                System.out.print("Enter venue number (1-30): ");
+                VenueReservationManager reservationSystem = new VenueReservationManager();
+
+                int venueNumber = scanner.nextInt();
+                scanner.nextLine(); // Consume newline left-over
+
+                System.out.print("Enter reservation date (YYYY-MM-DD): ");
+                String dateString = scanner.nextLine();
+
+                System.out.print("Enter start time (HH:mm): ");
+                String startTimeString = scanner.nextLine();
+                LocalDateTime startTime = LocalDateTime.parse(dateString + " " + startTimeString, manager.DATE_TIME_FORMATTER);
+
+                System.out.print("Enter end time (HH:mm): ");
+                String endTimeString = scanner.nextLine();
+                LocalDateTime endTime = LocalDateTime.parse(dateString + " " + endTimeString, manager.DATE_TIME_FORMATTER);
+
+                reservationSystem.reserveVenue(venueNumber, startTime, endTime);
+                break;
+                case 2: // Checking reservations
+                      System.out.println("Options\n1. Enter a venue\n2. Enter a date\n3. Enter a time\n\nChoose option:");
+    int subChoice = scanner.nextInt();
+    scanner.nextLine(); // Consume the newline
+
+    switch (subChoice) {
+        case 1:
+            // Logic for checking reservations by venue
+            System.out.println("Enter a venue number (1-30):");
+            int venueNum = scanner.nextInt();
+            scanner.nextLine(); // Consume newline left-over
+            manager.checkReservationsByVenue(venueNum);
+            break;
+        case 2:
+            // Logic for checking reservations by date
+            System.out.println("Enter a date (YYYY-MM-DD):");
+            String dateStr = scanner.nextLine();
+            try {
+                LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+                manager.checkReservationsByDate(date);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format.");
+            }
+            break;
+        case 3:
+            // Logic for checking reservations by time
+            System.out.println("Enter a time (HH:mm):");
+            String timeStr = scanner.nextLine();
+            try {
+                LocalTime time = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
+                manager.checkReservationsByTime(time);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid time format.");
+            }
+            break;
+        default:
+            System.out.println("Invalid option.");
+            break;
+    }
+    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+            }
+        }
+    }
+}
 
 // AMIRA'S PART //
 
