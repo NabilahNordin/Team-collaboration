@@ -3,6 +3,8 @@ A project called "A Venue Reservation System"
 
 i. Group Name // Amira //
 
+  Group Venue
+
 
 ii. Group Member Details (Name & Matric No) // Damia
     1. Nabilah Binti Ahmad Nordin (2225498)
