@@ -45,10 +45,10 @@ public class Main {
     }
 
     private static void displayMenu() {
-        System.out.println("#################################################");
-        System.out.println("####  Welcome To Venue Reservation System  ####");
-        System.out.println("#################################################");
-        System.out.println("Choose your option: \n1. View unavailable venues \n2. Make a reservation \n3. Find reservations \n4. Cancel Reservation \n5. Exit");
-        System.out.println("Enter your option:");
+        System.out.println("\n\n\t#################################################");
+        System.out.println("\t####   Welcome To Venue Reservation System   ####");
+        System.out.println("\t#################################################");
+        System.out.println("\nChoose your option \n1. View unavailable venues \n2. Make a reservation \n3. Find reservations \n4. Cancel Reservation \n5. Exit");
+        System.out.println("\nEnter your option:");
     }
 }
