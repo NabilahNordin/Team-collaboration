@@ -1,46 +1,54 @@
 // test for our Reservation Venue System //
+/* Members of the Group 5 are :
+   NABILAH BINTI AHMAD NORDIN (2225498),
+   SITI DAMIA BINTI AB RAZAK  (2210034),
+   NUR AMIRA BINTI AZHARI     (2217176),
+   DINIY BINTI JOHAN          (2224132). */
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        VenueReservationSystem reservationSystem = new VenueReservationSystem();
-        Scanner scanner = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
+        VenueReservationSystem venueReservationSystem = new VenueReservationSystem();
+        boolean continueLoop = true; // Determines if the program should continue looping
 
-        int choice;
-        do {
-            System.out.println("\nChoose your option:");
-            System.out.println("1. View available venues");
-            System.out.println("2. Make a reservation");
-            System.out.println("3. View all reservations");
-            System.out.println("4. Cancel Reservation");
-            System.out.println("5. Exit");
+        while (continueLoop) {
+            displayMenu();
 
-            System.out.print("\nEnter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); 
+            int option = input.nextInt();
+            input.nextLine(); // Consume newline left-over
 
-            switch (choice) {
+            switch (option) {
                 case 1:
-                    reservationSystem.displayVenues();
+                    venueReservationSystem.availableVenues();
                     break;
                 case 2:
-                    reservationSystem.makeReservation(scanner);
+                    venueReservationSystem.makeReservation(venueReservationSystem.getBookings());
                     break;
                 case 3:
-                    reservationSystem.viewAllReservations();
+                    venueReservationSystem.findReservation(venueReservationSystem.getBookings());
                     break;
                 case 4:
-                    // Add logic for cancellation as in your original code
+                    venueReservationSystem.cancelReservation(venueReservationSystem.getBookings());
                     break;
                 case 5:
-                    System.out.println("Thank you. Goodbye!");
+                    continueLoop = false;
+                    System.out.println("All memory cache data deleted. Bye2");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter a valid option.");
+                    System.out.println("Invalid option");
+                    break;
             }
-        } while (choice != 5);
+        }
+        input.close();
+    }
 
-        scanner.close();
+    private static void displayMenu() {
+        System.out.println("#################################################");
+        System.out.println("####  Welcome To Venue Reservation System  ####");
+        System.out.println("#################################################");
+        System.out.println("Choose your option: \n1. View unavailable venues \n2. Make a reservation \n3. Find reservations \n4. Cancel Reservation \n5. Exit");
+        System.out.println("Enter your option:");
     }
 }
