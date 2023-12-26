@@ -3,7 +3,7 @@ A project called "A Venue Reservation System"
 
 i. Group Name // Amira //
 
-  Group Venue
+  Group 5
 
 
 ii. Group Member Details (Name & Matric No) // Damia
