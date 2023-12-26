@@ -1,211 +1,385 @@
 // Reservation Venue System //
+/* Members of the Group 5 are :
+   NABILAH BINTI AHMAD NORDIN (2225498),
+   SITI DAMIA BINTI AB RAZAK  (2210034),
+   NUR AMIRA BINTI AZHARI     (2217176),
+   DINIY BINTI JOHAN          (2224132). */
 
-import java.util.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Duration;
-
-class Venue {
-    private int venueId;
-    private String venueType;
-    private String reservedBy;
-    private String phoneNumber;
-
-    public Venue(int venueId) {
-        this.venueId = venueId;
-        this.venueType = "";
-        this.reservedBy = "";
-        this.phoneNumber = "";
-    }
-
-    // Getters and setters
-    public int getVenueId() {
-        return venueId;
-    }
-
-    public String getVenueType() {
-        return venueType;
-    }
-
-    public void setVenueType(String venueType) {
-        this.venueType = venueType;
-    }
-
-    public String getReservedBy() {
-        return reservedBy;
-    }
-
-    public void setReservedBy(String reservedBy) {
-        this.reservedBy = reservedBy;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-}
-
-class Building {
-    private List<Venue> venues;
-
-    public Building() {
-        venues = new ArrayList<>();
-        initializeVenues();
-    }
-
-    private void initializeVenues() {
-        for (int i = 1; i <= 30; i++) {
-            venues.add(new Venue(i));
-        }
-    }
-
-    public void displayVenues() {
-        System.out.println("\nAvailable venues:");
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 3; j++) {
-                int venueId = i + 1 + j * 10;
-                if (venueId <= venues.size()) {
-                    String status = venues.get(venueId - 1).getVenueType().isEmpty() ? "" : "(reserved)";
-                    System.out.printf("Venue ID: %2d %s\t", venueId, status);
-                } else {
-                    System.out.print("\t\t");
-                }
-            }
-            System.out.println();
-        }
-    }
-
-    public boolean isVenueReserved(int venueId) {
-        return !venues.get(venueId - 1).getVenueType().isEmpty();
-    }
-
-    public void makeReservation(int venueId, String name, String phoneNumber, String eventType) {
-        Venue venue = venues.get(venueId - 1);
-        venue.setVenueType(eventType);
-        venue.setReservedBy(name);
-        venue.setPhoneNumber(phoneNumber);
-        System.out.println("Processing reservation for Venue ID: " + venueId + " for " + eventType);
-    }
-
-    public void viewAllReservations() {
-        System.out.println("\nAll Reservations:");
-        for (Venue venue : venues) {
-            if (!venue.getVenueType().isEmpty()) {
-                System.out.println("Reserved by: " + venue.getReservedBy() + ", Phone Number: " + venue.getPhoneNumber() + ", Venue ID: " + venue.getVenueId() + ", Type: " + venue.getVenueType());
-            }
-        }
-    }
-}
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class VenueReservationSystem {
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private static final int TOTAL_VENUES = 30;
-    private static final int OPENING_HOUR = 8;
-    private static final int CLOSING_HOUR = 23;
-    private static final BigDecimal FEE_RATE = new BigDecimal("10.00"); // Fee rate per half an hour
 
-    private Building building;
+    private List<Booking> bookings;
+    private Scanner scanner;
+    private int venueId;
+    private String phone;
+    private String type;
+    private String reservationDateString;
+    private String time;
 
     public VenueReservationSystem() {
-        building = new Building();
+        bookings = new ArrayList<>();
+        scanner = new Scanner(System.in);
+        venueId = 0; // Initialize the variable venueId
+        phone = ""; // Initialize the variable phone
+        type = ""; // Initialize the variable type
+        reservationDateString = ""; // Initialize the variable reservationDateString
+        time = ""; // Initialize the variable time
     }
 
-    public void displayVenues() {
-        building.displayVenues();
-    }
+    void availableVenues() {
+        if (bookings.isEmpty()) {
+            System.out.println("---------------\nAll venues available. \n\n\n\n---------------\n");
+        } else {
+            System.out.println("#################################################");
+            System.out.println("####   Booking ID already reserved           ####");
+            System.out.println("####    A) 8:00 am - 6:00 pm                 ####");
+            System.out.println("####    B) 6:00 pm - 11:00 pm                ####");
+            System.out.println("#################################################");
+            System.out.println("Booking ID already reserved : \n");
+            System.out.println("############################################################################################");
 
-    public void makeReservation(Scanner scanner) {
-        System.out.println("Please note: The venues are operating from 8am until 11pm.");
+            for (int key = 0; key < bookings.size(); key++) {
+                Booking val = bookings.get(key);
+                String rt = (val.getTime().equals("A")) ? "A = for 8:00 am until 6:00 pm" : "B = for 6:00 pm until 11:00 pm";
+                String ty;
+                if (val.getType().equals("1")) {
+                    ty = "1 = Conference";
+                } else if (val.getType().equals("2")) {
+                    ty = "2 = Seminar";
+                } else {
+                    ty = val.getType();
+                }
 
-        int venueId;
-        do {
-            System.out.print("\nEnter the venue ID to reserve (1-30): ");
-            venueId = scanner.nextInt();
-            scanner.nextLine();
-
-            if (building.isVenueReserved(venueId)) {
-                System.out.println("The venue is already reserved. Please enter a different venue.");
+                System.out.println("ID: " + (key + 1) + ", Venue: " + val.getVenueId() + ", Name: " + val.getName() + ", Phone: " + val.getPhone() +
+                        ", Date: " + val.getReservationDate() + ", Time: " + rt);
             }
-        } while (building.isVenueReserved(venueId));
-
-        System.out.print("Enter your name: ");
-        String name = scanner.nextLine().trim();
-
-        System.out.print("Enter your phone number: ");
-        String phoneNumber = scanner.nextLine().trim();
-
-        System.out.print("Enter the type of event (Conference or Seminar): ");
-        String eventType = scanner.nextLine().trim();
-
-        System.out.print("Enter reservation date (YYYY-MM-DD): ");
-        String dateString = scanner.nextLine();
-
-        System.out.print("Enter start time (HH:mm): ");
-        String startTimeString = scanner.nextLine(); // Fix: Add missing method call on scanner object
-
-        System.out.print("Enter end time (HH:mm): ");
-        String endTimeString = scanner.nextLine();
-        LocalDateTime startTime = LocalDateTime.parse(dateString + " " + startTimeString, DATE_TIME_FORMATTER);
-
-        LocalDateTime endTime = LocalDateTime.parse(dateString + " " + endTimeString, DATE_TIME_FORMATTER);
-
-        if (endTime.isBefore(startTime)) {
-            endTime = endTime.plusDays(1);
-        }
-
-        // Reservation logic
-        if (reserveVenue(venueId, startTime, endTime)) {
-            building.makeReservation(venueId, name, phoneNumber, eventType);
+            System.out.println("#################################################");
+            System.out.println("---------------\n\n\n\n");
         }
     }
 
-    public boolean reserveVenue(int venueNumber, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        // Check if the venue number is valid
-        if (venueNumber < 1 || venueNumber > TOTAL_VENUES) {
-            System.out.println("Invalid venue number.");
-            return false;
+    List<Booking> makeReservation(List<Booking> bookings) {
+        System.out.println("#############################################################################");
+        System.out.println("####              Make Reservation                                       ####");
+        System.out.println("####---------------------------------------------------------------------####");
+        System.out.println("#### Please note: The venues are operating from 8:00 am until 11:00 pm   ####");
+        System.out.println("####    2 sessions in a day. Choose Option :                              ####");
+        System.out.println("####    A) 8:00 am - 6:00 pm                                             ####");
+        System.out.println("####    B) 6:00 pm - 11:00 pm                                            ####");
+        System.out.println("#############################################################################");
+
+        boolean x = false;
+        while (!x) {
+            System.out.println("Enter the venue ID to reserve (1-30):");
+            int venueId = Integer.parseInt(scanner.nextLine());
+
+            if (venueId < 1 || venueId > 30) {
+                System.out.println("Error venue ID. Please input 1 to 30 only.");
+                x = false;
+            } else {
+                x = true;
+
+                int bothAB = 0;
+                for (Booking val : bookings) {
+                    if (venueId == val.getVenueId() && (val.getTime().equals("A") || val.getTime().equals("B"))) {
+                        bothAB++;
+                    }
+                    if (bothAB > 1) {
+                        System.out.println("Error " + venueId + " already reserved. Please input 1 to 30 except " + venueId);
+                        x = false;
+                        break;
+                    }
+                }
+                // Update the venueId instance variable
+            this.venueId = venueId;
+            }
         }
 
-        // Check for valid reservation times
-        if (!isValidReservationTime(startDateTime, endDateTime)) {
-            return false;
+        System.out.println("Enter your Name:");
+        String name = scanner.nextLine();
+
+        boolean z = false;
+        while (!z) {
+            System.out.println("Enter your phone number:");
+            this.phone = scanner.nextLine();
+            if (this.phone.matches("\\d{10,}")) {
+                System.out.println("The phone number is valid.");
+                z = true;
+            } else {
+                System.out.println("The phone number is not valid. Phone Number must be more than 10 digits.");
+            }
         }
 
-        // Venue availability logic
-        // This logic is simplified. Implement conflict checking based on your application's needs.
-
-        System.out.println("\nVenue reserved successfully.");
-        calculateFee(startDateTime, endDateTime);
-        return true;
-    }
-
-    private boolean isValidReservationTime(LocalDateTime start, LocalDateTime end) {
-        // Check opening and closing times
-        if (start.getHour() < OPENING_HOUR || end.getHour() > CLOSING_HOUR) {
-            System.out.println("Venue is closed at this time.");
-            return false;
+        z = false;
+        while (!z) {
+            System.out.println("Enter the type of event \n'1' = Conference\n'2' = Seminar");
+            this.type = scanner.nextLine();
+            if (this.type.equals("1") || this.type.equals("2")) {
+                System.out.println("The type of event is valid.");
+                z = true;
+            } else {
+                System.out.println("The type of event is not valid. Please input 1 or 2 only.");
+            }
         }
-        // Check if the reservation pasts midnight
-        if (!start.toLocalDate().isEqual(end.toLocalDate())) {
-            System.out.println("Overnight reservations are not allowed.");
-            return false;
+
+        z = false;
+        while (!z) {
+            System.out.println("Enter reservation date (YYYY-MM-DD):");
+            this.reservationDateString = scanner.nextLine();
+            if (is_valid_date_format(this.reservationDateString)) {
+                if (is_date_before_today(this.reservationDateString)) {
+                    z = true;
+                } else {
+                    System.out.println("Please input a reservation date (YYYY-MM-DD) that is more than today. Example: " + java.time.LocalDate.now());
+                }
+            } else {
+                System.out.println("Please input a reservation date (YYYY-MM-DD). Example: " + java.time.LocalDate.now());
+            }
         }
-        return true;
+
+        z = false;
+        while (!z) {
+            System.out.println("Enter reservation time \n'A' = 8:00 am until 6:00 pm \n'B' = 6:00 pm until 11:00 pm: \n'C' = cancel");
+            this.time = scanner.nextLine();
+            if (this.time.equals("A") || this.time.equals("B")) {
+                z = true;
+            } else {
+                System.out.println("Please input 'A' for 8:00 am until 6:00 pm or 'B' for 6:00 pm until 11:00 pm only.");
+            }
+
+            if (z) {
+                for (Booking val : bookings) {
+                    if (this.time.equals(val.getTime()) && venueId == val.getVenueId()) {
+                        if (val.getTime().equals("A")) {
+                            System.out.println("Error. 'A' = for 8:00 am until 6:00 pm already reserved. Please select 'B' = for 6:00 pm until 11:00 pm only.");
+                        } else {
+                            System.out.println("Error. 'B' = for 6:00 pm until 11:00 pm already reserved. Please select 'A' = for 8:00 am until 6:00 pm only.");
+                        }
+
+                        x = false;
+                        z = false;
+                        break;
+                    }
+                }
+            }
+
+            if (this.time.equals("C")) {
+                System.out.println("Cancel Reservation\n\n\n\n");
+                return bookings;
+                
+            }
+        }
+
+        bookings.add(new Booking(this.venueId, name, this.phone, this.type, this.reservationDateString, this.time));
+
+        String rt = (this.time.equals("A")) ? "A = for 8:00 am until 6:00 pm" : "B = for 6:00 pm until 11:00 pm";
+        String ty;
+        if (this.type.equals("1")) {
+            ty = "1 = Conference";
+        } else if (this.type.equals("2")) {
+            ty = "2 = Seminar";
+        } else {
+            ty = this.type;
+        }
+
+        System.out.println("#############################################################################");
+        System.out.println("####              Success Make Reservation                               ####");
+        System.out.println("####---------------------------------------------------------------------####");
+        System.out.println("####   Venue Id             :" + bookings.get(bookings.size() - 1).getVenueId());
+        System.out.println("####   Name                 :" + name);
+        System.out.println("####   Phone                :" + this.phone);
+        System.out.println("####   Type                 :" + ty);
+        System.out.println("####   Reservation Date     :" + this.reservationDateString);
+        System.out.println("####   Reservation Time     :" + rt);
+        System.out.println("#############################################################################\n\n\n\n");
+
+        return bookings;
     }
 
-    private void calculateFee(LocalDateTime start, LocalDateTime end) {
-        Duration duration = Duration.between(start, end);
-        long totalMinutes = (duration.toMinutes() + 29) / 30 * 30; // Rounding up to the nearest half-hour
-        BigDecimal fee = FEE_RATE.multiply(new BigDecimal(totalMinutes / 30));
-        System.out.println("The reservation fee is (RM10/half an hour): RM" + fee.setScale(2, RoundingMode.HALF_UP));
+    private boolean is_valid_date_format(String date_string) {
+        return date_string.matches("\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\\d|3[0-1])");
     }
 
-    public void viewAllReservations() {
-        building.viewAllReservations();
+    private boolean is_date_before_today(String date_string) {
+        String today = java.time.LocalDate.now().toString();
+        java.time.LocalDate input_date = java.time.LocalDate.parse(date_string);
+        java.time.LocalDate today_date = java.time.LocalDate.parse(today);
+
+        return input_date.isAfter(today_date);
     }
+
+    void findReservation(List<Booking> bookings) {
+        System.out.println("Please input Venue Id");
+        int find = Integer.parseInt(scanner.nextLine());
+        int count = 0;
+        for (int key = 0; key < bookings.size(); key++) {
+            Booking val = bookings.get(key);
+            String rt = (val.getTime().equals("A")) ? "A = for 8:00 am until 6:00 pm" : "B = for 6:00 pm until 11:00 pm";
+            String ty;
+            if (val.getType().equals("1")) {
+                ty = "1 = Conference";
+            } else if (val.getType().equals("2")) {
+                ty = "2 = Seminar";
+            } else {
+                ty = val.getType();
+            }
+
+            if (find == val.getVenueId()) {
+                System.out.println("#############################################################################");
+                System.out.println("####              Found                                                  ####");
+                System.out.println("####---------------------------------------------------------------------####");
+                System.out.println("####   Venue Id             :" + val.getVenueId());
+                System.out.println("####   Name                 :" + val.getName());
+                System.out.println("####   Phone                :" + val.getPhone());
+                System.out.println("####   Type                 :" + ty);
+                System.out.println("####   Reservation Date     :" + val.getReservationDate());
+                System.out.println("####   Reservation Time     :" + rt);
+                System.out.println("#############################################################################\n\n\n\n");
+
+                count++;
+            }
+        }
+        if (count == 0) {
+            System.out.println("#############################################################################");
+            System.out.println("####         Not Found. Maybe venue Id " + find + " Available");
+            System.out.println("####---------------------------------------------------------------------####\n\n\n\n");
+        }
+    }
+
+    List<Booking> cancelReservation(List<Booking> bookings) {
+        boolean loop = false;
+        while (!loop) {
+            System.out.println("Please input type for cancel reservation");
+            System.out.println("1 = cancel using ID");
+            System.out.println("2 = cancel using Venue");
+            String typeCancel = scanner.nextLine();
+            if (typeCancel.equals("1")) {
+                bookings = cancelUsingID(bookings);
+                loop = true;
+            } else if (typeCancel.equals("2")) {
+                bookings = cancelUsingVenue(bookings);
+                loop = true;
+            } else {
+                System.out.println("Please choose 1 or 2 only");
+            }
+        }
+
+        return bookings;
+    }
+
+    private List<Booking> cancelUsingID(List<Booking> bookings) {
+        System.out.println("Please input ID for cancel reservation:");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        int count = 0;
+        for (int key = 0; key < bookings.size(); key++) {
+            Booking val = bookings.get(key);
+            String rt = (val.getTime().equals("A")) ? "A = for 8:00 am until 6:00 pm" : "B = for 6:00 pm until 11:00 pm";
+
+            if ((key + 1) == id) {
+                System.out.println("Found ");
+                System.out.println("ID: " + (key + 1) + ", Venue: " + val.getVenueId() + ", Name: " + val.getName() + ", Phone: " + val.getPhone() +
+                        ", Date: " + val.getReservationDate() + ", Time: " + rt);
+                System.out.println("Cancel This? Type 'Y' for Yes");
+                String answer = scanner.nextLine();
+                if (answer.equalsIgnoreCase("Y")) {
+                    bookings.remove(key);
+                    System.out.println("Successfully deleted\n\n\n\n");
+                } else {
+                    System.out.println("Do Nothing\n\n\n\n");
+                }
+
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("Nothing deleted\n");
+        }
+        System.out.println("------------\n\n\n\n");
+        return bookings;
+    }
+
+    private List<Booking> cancelUsingVenue(List<Booking> bookings) {
+        System.out.println("Please input Venue for cancel reservation:");
+        int venueId = Integer.parseInt(scanner.nextLine());
+
+        for (int key = 0; key < bookings.size(); key++) {
+            Booking val = bookings.get(key);
+            if (venueId == val.getVenueId() && val.getTime().equals("A")) {
+                System.out.println("Found " + venueId + " for A) 8:00 am - 6:00 pm. Cancel This? Type 'Y' ");
+                String answer = scanner.nextLine();
+                if (answer.equalsIgnoreCase("Y")) {
+                    bookings.remove(key);
+                    System.out.println("Successfully deleted\n\n\n\n");
+                } else {
+                    System.out.println("Do Nothing\n\n\n\n");
+                }
+            }
+            if (venueId == val.getVenueId() && val.getTime().equals("B")) {
+                System.out.println("Found " + venueId + " for B) 6:00 pm - 11:00 pm. Cancel This? Type 'Y' ");
+                String answer = scanner.nextLine();
+                if (answer.equalsIgnoreCase("Y")) {
+                bookings.remove(key);
+                System.out.println("Successfully deleted\n\n\n\n");
+                } else {
+                System.out.println("Do Nothing\n\n\n\n");
+                }
+                }
+                }
+
+                System.out.println("------------\n\n\n\n");
+                return bookings;
+            }
+
+   
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+        }
+
+        class Booking {
+        private int venueId;
+        private String name;
+        private String phone;
+        private String type;
+        private String reservationDate;
+        private String time;
+
+        public Booking(int venueId, String name, String phone, String type, String reservationDate, String time) {
+    this.venueId = venueId;
+    this.name = name;
+    this.phone = phone;
+    this.type = type;
+    this.reservationDate = reservationDate;
+    this.time = time;
+}
+
+public int getVenueId() {
+    return venueId;
+}
+
+public String getName() {
+    return name;
+}
+
+public String getPhone() {
+    return phone;
+}
+
+public String getType() {
+    return type;
+}
+
+public String getReservationDate() {
+    return reservationDate;
+}
+
+public String getTime() {
+    return time;
+}
+
 }
