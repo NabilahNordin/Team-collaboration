@@ -14,6 +14,10 @@ ii. Group Member Details (Name & Matric No) // Damia
 
 
 iii. The assign task for each group member  // Diniy //
+    1. Nabilah Binti Ahmad Nordin (2225498)
+    2. Siti Damia Binti Ab Razak (2210034)
+    3. ⁠Nur Amira Binti Azhari(2217176)
+    4. ⁠Diniy Binti Johan (2224132)
 
 
 iv. Brief Description of the case study // Nabilah //
