@@ -364,6 +364,26 @@ public String getTime() {
     return time;
 }
 
+public void setVenueId(int venueId) {
+        this.venueId = venueId;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setReservationDateString(String reservationDateString) {
+        this.reservationDateString = reservationDateString;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
 public static class Fee extends Booking {
 
     private static final double FEE_PER_HOUR = 10.0;
