@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class VenueReservationSystem {
 
+
     private List<Booking> bookings;
     private Scanner scanner;
     private int venueId;
@@ -192,6 +193,7 @@ public class VenueReservationSystem {
             ty = this.type;
         }
 
+
         System.out.println("\n#############################################################################");
         System.out.println("####              Success Make Reservation                               ####");
         System.out.println("####---------------------------------------------------------------------####");
@@ -201,7 +203,8 @@ public class VenueReservationSystem {
         System.out.println("####   Type                 :" + ty);
         System.out.println("####   Reservation Date     :" + this.reservationDateString);
         System.out.println("####   Reservation Time     :" + rt);
-             //Calc fee
+        
+        //Calc fee
         double fee = new VenueReservationSystem.Booking.Fee(venueId, name, phone, type, reservationDateString, time).calculateFee();
         System.out.println("####   Fee                  : RM " + fee);
         System.out.println("#############################################################################\n\n\n");
@@ -318,7 +321,7 @@ public class VenueReservationSystem {
         return bookings;
     }
 
-    class Booking {
+    public static class Booking {
         private int venueId;
         private String name;
         private String phone;
@@ -334,6 +337,8 @@ public class VenueReservationSystem {
     this.reservationDate = reservationDate;
     this.time = time;
 }
+
+
 
 public int getVenueId() {
     return venueId;
@@ -359,7 +364,7 @@ public String getTime() {
     return time;
 }
 
-   public static class Fee extends Booking {
+public static class Fee extends Booking {
 
     private static final double FEE_PER_HOUR = 10.0;
 
@@ -367,7 +372,7 @@ public String getTime() {
         super(venueId, name, phone, type, reservationDate, time);
     }
 
-      public double calculateFee() {
+    public double calculateFee() {
       
         double hours = getTime().equals("A") ? 10.0 : 5.0;
         return FEE_PER_HOUR * hours;
@@ -377,8 +382,7 @@ public String getTime() {
     public String toString() {
         return super.toString() + String.format(", Fee: RM %.2f", calculateFee());
     }
-}          
 
-}
-
+   }
+ }
 }
