@@ -31,6 +31,8 @@ The system is designed for a building with 30 venues suitable for conferences an
 - *Development Criteria*: 
 The system should be built with separate classes using encapsulation, inheritance if possible, and use an ArrayList or an Array for data storage. Date and time management is critical, and the system should include error checking for both input and output.
 
+-Our system have two session which is session A and B . A is from 8.00 am - 6.00 pm and B is from 6.00 pm- 11.00 pm
+
 v. Class Diagram with has-a(composition) and is-a(inheritance) relationship (if available)  // all members do /////
 
 steady but surely
