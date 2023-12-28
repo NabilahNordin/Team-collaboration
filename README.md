@@ -148,6 +148,7 @@ Option 1: View unavailable venues
 <br/><br/>
 
 ### **vii. References**
+  * Textbook Reference: Liang, Y. D. (2017). Introduction to Java programming (11th ed.). Pearson.
  
   * Reservation system (stores an array list and has multiple methods). (2019). Stakeoverflow. https://stackoverflow.com/questions/53381640/im-trying-to-write-a-class-that-stores-an-array-list-and-has-multiple-methods
 
